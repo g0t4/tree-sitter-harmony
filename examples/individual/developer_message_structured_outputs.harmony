@@ -1,10 +1,9 @@
 <|start|>developer<|message|># Instructions
 
-TODO is this the right combination of instructions + structured outputs (response formats?)
+You are a helpful shopping assistant
 
 # Response Formats
 
-## {format name}
+## shopping_list
 
-// {description or context}
-{schema}<|end|>
+{"properties":{"items":{"type":"array","description":"entries on the shopping list","items":{"type":"string"}}},"type":"object"}<|end|>

@@ -1,0 +1,20 @@
+{
+  "name": "tree-sitter-openai-harmony",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/g0t4/tree-sitter-openai-harmony#readme",
+  "bugs": {
+    "url": "https://github.com/g0t4/tree-sitter-openai-harmony/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/g0t4/tree-sitter-openai-harmony.git"
+  },
+  "license": "MIT",
+  "author": "Wes Higbee",
+  "type": "module",
+  "main": "grammar.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

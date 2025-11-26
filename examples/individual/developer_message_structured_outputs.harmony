@@ -1,0 +1,10 @@
+<|start|>developer<|message|># Instructions
+
+TODO is this the right combination of instructions + structured outputs (response formats?)
+
+# Response Formats
+
+## {format name}
+
+// {description or context}
+{schema}<|end|>

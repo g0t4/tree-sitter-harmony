@@ -14,20 +14,33 @@ module.exports = grammar({
     // TODO ... explore more testing w.r.t. observation: 
     //   observation? seems like the first entry must match the full file? w/o this I get errors?
     messages: $ => repeat(choice(
-      $.message_user,
-      $.message_assistant_final, $.message_assistant_analysis, $.message_assistant_commentary_tool_call)),
-    // source_file: $ => seq($.start_token, $.end_token),
-    message_user: $ => seq(
-      $.start_token, $.role_user,
-      $.message_content_tail
-    ),
+      // TODO header => split out header types instead of top level message types? would allow for more flexible parsing later... wouldn't require full message AIO
+      //  i.e. $.header_user, $.header_assistant (subdivided), $.header_system, $.header_developer, $.header_tool_result
 
-    tool_call_result_message: $ => seq(
-      $.start_token, $.role_tool, " ", $.recipient_assistant,
+      $.message_system,
+      $.message_developer,
+      $.message_user,
+      $.message_tool_result,
+      // assistant:
+      $.message_assistant_final,
+      $.message_assistant_analysis,
+      $.message_assistant_commentary_tool_call,
+    )),
+
+    // source_file: $ => seq($.start_token, $.end_token),
+    message_user: $ => seq($.start_token, $.role_user, $.message_content_tail),
+    message_system: $ => seq($.start_token, $.role_system, $.message_content_tail),
+    message_developer: $ => seq($.start_token, $.role_developer, $.message_content_tail),
+
+    // <|start|>functions.get_current_weather to=assistant<|channel|>commentary<|message|>{"sunny": true, "temperature": 20}<|end|>
+    message_tool_result: $ => seq(
+      $.start_token,
+      $.role_tool, " ", $.recipient_assistant,
       $.channel_token, "commentary",
       $.message_content_tail
     ),
-    // <|start|>functions.get_current_weather to=assistant<|channel|>commentary<|message|>{"sunny": true, "temperature": 20}<|end|>
+    role_tool: $ => seq("functions.", RegExp("[^\s]+")), // ? add?
+
 
     // assistant_channel: $ => choice("analysis", "final", $.assistant_commentary), 
     message_assistant_analysis: $ => seq(
@@ -87,7 +100,6 @@ module.exports = grammar({
     role_developer: $ => "developer",
     role_user: $ => "user",
     role_assistant: $ => "assistant",
-    role_tool: $ => seq("functions.", RegExp("[^\s]+")), // ? add?
 
     // header: $ => RegExp(".*"),
 

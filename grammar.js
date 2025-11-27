@@ -33,7 +33,10 @@ module.exports = grammar({
     header_tool_result: $ => seq($.role_tool, " ", $.recipient_assistant, $.channel_token, "commentary"),
     header_assistant: $ => "TODO",
     header_assistant_analysis: $ => seq($.role_assistant, $.channel_token, "analysis"),
-
+    header_assistant_final: $ => seq($.role_assistant, $.channel_token, "final"),
+    header_assistant_commentary_tool_call: $ => seq(
+      $.role_assistant, $.channel_token, $.assistant_commentary, optional($.assistant_commentary),
+    ),
 
     // source_file: $ => seq($.start_token, $.end_token),
     message_user: $ => seq($.start_token, $.header_user, $.message_content_tail),
@@ -54,13 +57,13 @@ module.exports = grammar({
     ),
     message_assistant_final: $ => seq(
       $.start_token,
-      $.role_assistant, $.channel_token, "final",
+      $.header_assistant_final,
       $.message_content_tail
     ),
     // - `<|start|>assistant<|channel|>commentary to=functions.get_current_weather <|constrain|>json<|message|>{"location":"San Francisco"}<|call|>`
     message_assistant_commentary_tool_call: $ => seq(
       $.start_token,
-      $.role_assistant, $.channel_token, $.assistant_commentary, optional($.assistant_commentary),
+      $.header_assistant_commentary_tool_call,
       $.message_content_tail
     ),
     assistant_commentary: $ => seq("commentary ", $.recipient_functions),

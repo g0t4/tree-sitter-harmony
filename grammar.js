@@ -42,7 +42,6 @@ module.exports = grammar({
       $.role_assistant, $.channel_token, $.assistant_commentary, optional($.assistant_commentary),
     ),
 
-    // source_file: $ => seq($.start_token, $.end_token),
     message_user: $ => seq($.start_token, $.header_user, $.message_content_tail),
     message_system: $ => seq($.start_token, $.header_system, $.message_content_tail),
     message_developer: $ => seq($.start_token, $.header_developer, $.message_content_tail),

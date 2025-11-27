@@ -14,9 +14,6 @@ module.exports = grammar({
     // TODO ... explore more testing w.r.t. observation: 
     //   observation? seems like the first entry must match the full file? w/o this I get errors?
     messages: $ => repeat(choice(
-      // TODO header => split out header types instead of top level message types? would allow for more flexible parsing later... wouldn't require full message AIO
-      //  i.e. $.header_user, $.header_assistant (subdivided), $.header_system, $.header_developer, $.header_tool_result
-
       $.message_system,
       $.message_developer,
       $.message_user,
@@ -27,37 +24,40 @@ module.exports = grammar({
       $.message_assistant_commentary_tool_call,
     )),
 
+    // TODO header => split out header types instead of top level message types? would allow for more flexible parsing later... wouldn't require full message AIO
+    //  i.e. $.header_assistant (subdivided), $.header_tool_result
+    header_user: $ => $.role_user,
+    header_system: $ => $.role_system,
+    header_developer: $ => $.role_developer,
+    header_tool_result: $ => seq($.role_tool, " ", $.recipient_assistant, $.channel_token, "commentary"),
+    // header_assistant: $ => $. // TODO
+
     // source_file: $ => seq($.start_token, $.end_token),
-    message_user: $ => seq($.start_token, $.role_user, $.message_content_tail),
-    message_system: $ => seq($.start_token, $.role_system, $.message_content_tail),
-    message_developer: $ => seq($.start_token, $.role_developer, $.message_content_tail),
+    message_user: $ => seq($.start_token, $.header_user, $.message_content_tail),
+    message_system: $ => seq($.start_token, $.header_system, $.message_content_tail),
+    message_developer: $ => seq($.start_token, $.header_developer, $.message_content_tail),
 
     // <|start|>functions.get_current_weather to=assistant<|channel|>commentary<|message|>{"sunny": true, "temperature": 20}<|end|>
-    message_tool_result: $ => seq(
-      $.start_token,
-      $.role_tool, " ", $.recipient_assistant,
-      $.channel_token, "commentary",
-      $.message_content_tail
-    ),
+    message_tool_result: $ => seq($.start_token, $.header_tool_result, $.message_content_tail),
+
     role_tool: $ => seq("functions.", RegExp("[^\s]+")), // ? add?
 
 
     // assistant_channel: $ => choice("analysis", "final", $.assistant_commentary), 
     message_assistant_analysis: $ => seq(
-      $.start_token, $.role_assistant,
-      $.channel_token, "analysis",
+      $.start_token,
+      $.role_assistant, $.channel_token, "analysis",
       $.message_content_tail
     ),
     message_assistant_final: $ => seq(
-      $.start_token, $.role_assistant,
-      $.channel_token, "final",
+      $.start_token,
+      $.role_assistant, $.channel_token, "final",
       $.message_content_tail
     ),
     // - `<|start|>assistant<|channel|>commentary to=functions.get_current_weather <|constrain|>json<|message|>{"location":"San Francisco"}<|call|>`
     message_assistant_commentary_tool_call: $ => seq(
-      $.start_token, $.role_assistant,
-      $.channel_token, $.assistant_commentary,
-      optional($.assistant_commentary),
+      $.start_token,
+      $.role_assistant, $.channel_token, $.assistant_commentary, optional($.assistant_commentary),
       $.message_content_tail
     ),
     assistant_commentary: $ => seq("commentary ", $.recipient_functions),

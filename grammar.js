@@ -13,7 +13,7 @@ module.exports = grammar({
   rules: {
     // TODO ... explore more testing w.r.t. observation: 
     //   observation? seems like the first entry must match the full file? w/o this I get errors?
-    messages: $ => repeat($.message),
+    messages: $ => repeat1($.message),
 
     // TODO? which $.message definition? emphasize message types (strict) or header types (loose)?
     // TODO message types (strict):

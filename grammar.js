@@ -21,7 +21,10 @@ module.exports = grammar({
       // assistant:
       $.message_assistant_final,
       $.message_assistant_analysis,
-      $.message_assistant_commentary_tool_call,
+      $.message_assistant_commentary_tool_call_end,
+      // decode only:
+      $.message_assistant_commentary_tool_call_call,
+      $.message_assistant_return,
       // BTW I can keep top level message types PLUS have header types! that way I keep top level useful message grouping... unless I don't have a full message in which case I think get header grouping (if available)!
     )),
 
@@ -56,13 +59,25 @@ module.exports = grammar({
     message_assistant_final: $ => seq($.start_token, $.header_assistant_final, $.content_tail),
     //
     // - `<|start|>assistant<|channel|>commentary to=functions.get_current_weather <|constrain|>json<|message|>{"location":"San Francisco"}<|call|>`
-    message_assistant_commentary_tool_call: $ => seq($.start_token, $.header_assistant_commentary_tool_call, $.content_tail),
+    message_assistant_commentary_tool_call_end: $ => seq(
+      $.start_token, $.header_assistant_commentary_tool_call, $.content_tail),
+    message_assistant_commentary_tool_call_call: $ => seq(
+      $.start_token, $.header_assistant_commentary_tool_call, $.call_tail),
+    call_tail: $ => seq($.message_token, $.message_content, $.call_token), // FYI <|call|> is mapped to <|end|> when sending next user request turn
+    //
     assistant_commentary: $ => seq("commentary ", $.recipient_functions),
     constrain_format: $ => seq($.constrain_token, "json"),
 
     // super common - high level concepts
     content_tail: $ => seq($.message_token, $.message_content, $.end_token),
-    // TODO header? any utility in this as a node?
+    //
+    return_tail: $ => seq($.message_token, $.message_content, $.return_token), // PRN collapse into message_assistant_return?
+    message_assistant_return: $ => seq(
+      $.start_token,
+      $.header_assistant_final,
+      $.return_tail
+    ),
+
 
 
     // * special tokens

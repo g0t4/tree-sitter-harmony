@@ -25,6 +25,7 @@ module.exports = grammar({
     )),
 
     // TODO header => split out header types instead of top level message types? would allow for more flexible parsing later... wouldn't require full message AIO
+    header: $ => choice($.header_user, $.header_system, $.header_developer, $.header_tool_result, $.header_assistant),
     //  i.e. $.header_assistant (subdivided), $.header_tool_result
     header_user: $ => $.role_user,
     header_system: $ => $.role_system,

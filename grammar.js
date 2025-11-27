@@ -24,15 +24,32 @@ module.exports = grammar({
     ),
     // <|start|>functions.get_current_weather to=assistant<|channel|>commentary<|message|>{"sunny": true, "temperature": 20}<|end|>
 
-    // messages
-    // messages
+    // assistant_channel: $ => choice("analysis", "final", $.assistant_commentary), 
     assistant_analysis: $ => seq(
       $.start_token, $.role_assistant,
-      $.channel_token, $.assistant_channel,
+      $.channel_token, "analysis",
       $.message_content_tail
     ),
+    assistant_final: $ => seq(
+      $.start_token, $.role_assistant,
+      $.channel_token, "final",
+      $.message_content_tail
+    ),
+    // - `<|start|>assistant<|channel|>commentary to=functions.get_current_weather <|constrain|>json<|message|>{"location":"San Francisco"}<|call|>`
+    assistant_commentary_tool_call: $ => seq(
+      $.start_token, $.role_assistant,
+      $.channel_token, $.assistant_commentary,
+      optional($.assistant_commentary),
+      $.message_content_tail
+    ),
+    assistant_commentary: $ => seq("commentary ", $.recipient_functions),
+    constrain_format: $ => seq($.constrain_token, "json"),
 
+
+
+    // super common - high level concepts
     message_content_tail: $ => seq($.message_token, $.message_content, $.end_token),
+    // TODO header? any utility in this as a node?
 
 
     // * special tokens
@@ -45,9 +62,7 @@ module.exports = grammar({
     return_token: $ => "<|return|>", // instead of <|end|> on a final message
     call_token: $ => "<|call|>", // assistant commentary channel => tool request only
 
-    assistant_channel: $ => choice("analysis", "final", $.assistant_commentary), // PRN break out each channel into own rule?
     // TODO could break out commentary into own rule that has recipient
-    assistant_commentary: $ => seq("commentary", $.recipient_functions),
 
 
     // full messages:

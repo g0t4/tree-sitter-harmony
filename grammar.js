@@ -11,7 +11,8 @@ module.exports = grammar({
   name: "harmony",
 
   rules: {
-    // TODO: add the actual grammar rules
-    source_file: $ => "hello"
-  }
+    source_file: ($) => seq($.start, $.end),
+    start: ($) => "<|start|>",
+    end: ($) => "<|end|>",
+  },
 });

@@ -15,7 +15,8 @@
   "type": "commonjs",
   "main": "grammar.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "generate": "tree-sitter generate",
+    "test": "npm run generate && tree-sitter parse test.harmony"
   },
   "devDependencies": {
     "tree-sitter-cli": "^0.25.10"

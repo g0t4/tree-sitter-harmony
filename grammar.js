@@ -16,6 +16,7 @@ module.exports = grammar({
     messages: $ => repeat($.message),
 
     // TODO? which $.message definition? emphasize message types (strict) or header types (loose)?
+    // TODO message types (strict):
     // message: $ => choice(
     //   $.message_system,
     //   $.message_developer,
@@ -30,7 +31,7 @@ module.exports = grammar({
     //   $.message_assistant_return,
     //   // BTW I can keep top level message types PLUS have header types! that way I keep top level useful message grouping... unless I don't have a full message in which case I think get header grouping (if available)!
     // ),
-    // TODO make message generic?
+    // TODO or, generic message + header types (loose):
     message: $ => seq($.start_token, $.header, $.message_and_content, $.final_token),
     final_token: $ => choice($.end_token, $.return_token, $.call_token), // looser definition too b/c not limiting return/call tokens on end of specific messages
 

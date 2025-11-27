@@ -42,26 +42,26 @@ module.exports = grammar({
       $.role_assistant, $.channel_token, $.assistant_commentary, optional($.assistant_commentary),
     ),
 
-    message_user: $ => seq($.start_token, $.header_user, $.message_content_tail),
-    message_system: $ => seq($.start_token, $.header_system, $.message_content_tail),
-    message_developer: $ => seq($.start_token, $.header_developer, $.message_content_tail),
+    message_user: $ => seq($.start_token, $.header_user, $.content_tail),
+    message_system: $ => seq($.start_token, $.header_system, $.content_tail),
+    message_developer: $ => seq($.start_token, $.header_developer, $.content_tail),
 
     // <|start|>functions.get_current_weather to=assistant<|channel|>commentary<|message|>{"sunny": true, "temperature": 20}<|end|>
-    message_tool_result: $ => seq($.start_token, $.header_tool_result, $.message_content_tail),
+    message_tool_result: $ => seq($.start_token, $.header_tool_result, $.content_tail),
 
     role_tool: $ => seq("functions.", RegExp("[^\s]+")), // ? add?
 
     // assistant_channel: $ => choice("analysis", "final", $.assistant_commentary), 
-    message_assistant_analysis: $ => seq($.start_token, $.header_assistant_analysis, $.message_content_tail),
-    message_assistant_final: $ => seq($.start_token, $.header_assistant_final, $.message_content_tail),
+    message_assistant_analysis: $ => seq($.start_token, $.header_assistant_analysis, $.content_tail),
+    message_assistant_final: $ => seq($.start_token, $.header_assistant_final, $.content_tail),
     //
     // - `<|start|>assistant<|channel|>commentary to=functions.get_current_weather <|constrain|>json<|message|>{"location":"San Francisco"}<|call|>`
-    message_assistant_commentary_tool_call: $ => seq($.start_token, $.header_assistant_commentary_tool_call, $.message_content_tail),
+    message_assistant_commentary_tool_call: $ => seq($.start_token, $.header_assistant_commentary_tool_call, $.content_tail),
     assistant_commentary: $ => seq("commentary ", $.recipient_functions),
     constrain_format: $ => seq($.constrain_token, "json"),
 
     // super common - high level concepts
-    message_content_tail: $ => seq($.message_token, $.message_content, $.end_token),
+    content_tail: $ => seq($.message_token, $.message_content, $.end_token),
     // TODO header? any utility in this as a node?
 
 

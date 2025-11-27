@@ -11,8 +11,64 @@ module.exports = grammar({
   name: "harmony",
 
   rules: {
-    source_file: ($) => seq($.start, $.end),
-    start: ($) => "<|start|>",
-    end: ($) => "<|end|>",
+    // source_file: $ => seq($.start_token, $.end_token),
+    user_message: $ => seq(
+      $.start_token, $.role_user,
+      $.message_token, $.message_content, $.end_token
+    ),
+
+    tool_call_result_message: $ => seq(
+      $.start_token, $.role_tool, " ", $.recipient_assistant,
+      $.channel_token, "commentary",
+      $.message_token, $.message_content, $.end_token),
+    // <|start|>functions.get_current_weather to=assistant<|channel|>commentary<|message|>{"sunny": true, "temperature": 20}<|end|>
+
+    // messages
+    // messages
+    assistant_analysis: $ => seq(
+      $.start_token, $.role_assistant,
+      $.channel_token, $.assistant_channel,
+      $.message_token, $.message_content, $.end_token,
+    ),
+
+    message_content_part: $ => seq($.message_token, $.message_content, $.end_token),
+
+
+    // * special tokens
+    start_token: $ => "<|start|>",
+    end_token: $ => "<|end|>",
+    message_token: $ => "<|message|>",
+    channel_token: $ => "<|channel|>", // assistant & tool results only
+    constrain_token: $ => "<|constrain|>", // assistant & tool results only
+    // decode time only (not input)
+    return_token: $ => "<|return|>", // instead of <|end|> on a final message
+    call_token: $ => "<|call|>", // assistant commentary channel => tool request only
+
+    assistant_channel: $ => choice("analysis", "final", $.assistant_commentary), // PRN break out each channel into own rule?
+    // TODO could break out commentary into own rule that has recipient
+    assistant_commentary: $ => seq("commentary", $.recipient_functions),
+
+
+    // full messages:
+    //   <|start|>{header}<|message|>{content}<|end|>
+    //   TODO redo with $.header
+    // full_message: $ => seq($.start_token, $.header, $.message_token, $.message_content $.end_token)
+    message_content: $ => RegExp("[a-zA-Z\?\s]*"), // until <|end|>/<|return|>? or (or maybe <|start|>?
+
+    // * recipients
+    recipient_assistant: $ => "to=assistant",
+    // function_name: $ => "" ,
+    recipient_functions: $ => seq("to=functions.", RegExp("[^\s]+")),
+
+
+    // roles
+    role_system: $ => "system",
+    role_developer: $ => "developer",
+    role_user: $ => "user",
+    role_assistant: $ => "assistant",
+    role_tool: $ => seq("functions.", RegExp("[^\s]+")), // ? add?
+
+    // header: $ => RegExp(".*"),
+
   },
 });

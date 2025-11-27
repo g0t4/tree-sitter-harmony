@@ -14,13 +14,14 @@ module.exports = grammar({
     // source_file: $ => seq($.start_token, $.end_token),
     user_message: $ => seq(
       $.start_token, $.role_user,
-      $.message_token, $.message_content, $.end_token
+      $.message_content_tail
     ),
 
     tool_call_result_message: $ => seq(
       $.start_token, $.role_tool, " ", $.recipient_assistant,
       $.channel_token, "commentary",
-      $.message_token, $.message_content, $.end_token),
+      $.message_content_tail
+    ),
     // <|start|>functions.get_current_weather to=assistant<|channel|>commentary<|message|>{"sunny": true, "temperature": 20}<|end|>
 
     // messages
@@ -28,10 +29,10 @@ module.exports = grammar({
     assistant_analysis: $ => seq(
       $.start_token, $.role_assistant,
       $.channel_token, $.assistant_channel,
-      $.message_token, $.message_content, $.end_token,
+      $.message_content_tail
     ),
 
-    message_content_part: $ => seq($.message_token, $.message_content, $.end_token),
+    message_content_tail: $ => seq($.message_token, $.message_content, $.end_token),
 
 
     // * special tokens

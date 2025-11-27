@@ -11,9 +11,13 @@ module.exports = grammar({
   name: "harmony",
 
   rules: {
-    messages: $ => repeat(choice($.user_message, $.assistant_final)),
+    // TODO ... explore more testing w.r.t. observation: 
+    //   observation? seems like the first entry must match the full file? w/o this I get errors?
+    messages: $ => repeat(choice(
+      $.message_user,
+      $.message_assistant_final, $.message_assistant_analysis, $.message_assistant_commentary_tool_call)),
     // source_file: $ => seq($.start_token, $.end_token),
-    user_message: $ => seq(
+    message_user: $ => seq(
       $.start_token, $.role_user,
       $.message_content_tail
     ),
@@ -26,18 +30,18 @@ module.exports = grammar({
     // <|start|>functions.get_current_weather to=assistant<|channel|>commentary<|message|>{"sunny": true, "temperature": 20}<|end|>
 
     // assistant_channel: $ => choice("analysis", "final", $.assistant_commentary), 
-    assistant_analysis: $ => seq(
+    message_assistant_analysis: $ => seq(
       $.start_token, $.role_assistant,
       $.channel_token, "analysis",
       $.message_content_tail
     ),
-    assistant_final: $ => seq(
+    message_assistant_final: $ => seq(
       $.start_token, $.role_assistant,
       $.channel_token, "final",
       $.message_content_tail
     ),
     // - `<|start|>assistant<|channel|>commentary to=functions.get_current_weather <|constrain|>json<|message|>{"location":"San Francisco"}<|call|>`
-    assistant_commentary_tool_call: $ => seq(
+    message_assistant_commentary_tool_call: $ => seq(
       $.start_token, $.role_assistant,
       $.channel_token, $.assistant_commentary,
       optional($.assistant_commentary),

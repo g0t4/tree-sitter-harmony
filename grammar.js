@@ -10,9 +10,8 @@
 module.exports = grammar({
   name: "harmony",
 
-  // TODO language injection
-  // - for markdown in system/developer message contents
-  // - JSON in tool calls / results? (especially if <|constrain|>json!)
+  // - markdown? in system/developer message contents
+  // - more robust json constraints to injection queries
   // docs: https://tree-sitter.github.io/tree-sitter/3-syntax-highlighting.html#language-injection
 
   inline: $ => [

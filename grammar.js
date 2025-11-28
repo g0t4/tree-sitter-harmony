@@ -92,9 +92,7 @@ module.exports = grammar({
     //
     assistant_commentary: $ => seq(
       "commentary",
-      optional(seq(" ", $.recipient_functions,
-        optional(seq($.constrain_token, "json"))
-      ))
+      optional(seq(/\s+/, $.recipient_functions, optional($.constrain_format)))
     ),
     constrain_format: $ => seq($.constrain_token, "json"),
 

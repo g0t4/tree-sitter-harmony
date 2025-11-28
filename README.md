@@ -42,6 +42,9 @@ tree-sitter build
 
 # test parsing:
 tree-sitter parse test.harmony
+tree-sitter generate && tree-sitter parse examples/individual/system_message.harmony
+tree-sitter generate && tree-sitter parse examples/individual/developer_message.harmony
+# review output, it shows line/col of failures! i.e. ERROR nodes
 
 # interactive web 'app'
 # run docker to target wasm:

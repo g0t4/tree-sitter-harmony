@@ -19,7 +19,6 @@ module.exports = grammar({
   ],
 
   rules: {
-    // TODO ... explore more testing w.r.t. observation: 
     //   observation? seems like the first entry must match the full file? w/o this I get errors?
     source_file: $ => seq(
       optional($.model_response_to_prefill),
@@ -31,23 +30,7 @@ module.exports = grammar({
       $.final_token
     ),
 
-    // TODO? which $.message definition? emphasize message types (strict) or header types (loose)?
-    // TODO message types (strict):
-    // message: $ => choice(
-    //   $.message_system,
-    //   $.message_developer,
-    //   $.message_user,
-    //   $.message_tool_result,
-    //   // assistant:
-    //   $.message_assistant_final,
-    //   $.message_assistant_analysis,
-    //   $.message_assistant_commentary_tool_call_end,
-    //   // decode only:
-    //   $.message_assistant_commentary_tool_call_call,
-    //   $.message_assistant_return,
-    //   // BTW I can keep top level message types PLUS have header types! that way I keep top level useful message grouping... unless I don't have a full message in which case I think get header grouping (if available)!
-    // ),
-    // TODO or, generic message + header types (loose):
+    // compositional messages:
     message: $ => seq($.start_token, $.header, $.message_and_content, $.final_token),
     final_token: $ => choice($.end_token, $.return_token, $.call_token), // looser definition too b/c not limiting return/call tokens on end of specific messages
 
@@ -56,10 +39,13 @@ module.exports = grammar({
     header_user: $ => "user",
     header_system: $ => "system",
     header_developer: $ => "developer",
+
+    // tool results
     header_tool_result: $ => seq($.role_tool, " ", $.recipient_assistant, $.channel_token, "commentary"),
     recipient_assistant: $ => "to=assistant",
-    //
-    // assistant headers:
+    // <|start|>functions.get_current_weather to=assistant<|channel|>commentary<|message|>{"sunny": true, "temperature": 20}<|end|>
+
+    // assistant
     header_assistant: $ => choice(
       $.header_assistant_analysis, $.header_assistant_final, $.header_assistant_commentary
     ),
@@ -68,30 +54,17 @@ module.exports = grammar({
     header_assistant_commentary: $ => seq(
       $.role_assistant, $.channel_token, $.assistant_commentary, optional($.assistant_commentary),
       // ? does this work for preamble which is assistant_commentary w/o the to=functions.___ and instead just a regular message ending
+      // - `<|start|>assistant<|channel|>commentary to=functions.get_current_weather <|constrain|>json<|message|>{"location":"San Francisco"}<|call|>`
     ),
     // plausible model responses to typical prefill: <|start|>assistant
     channel_analysis: $ => seq($.channel_token, "analysis"),
     channel_final: $ => seq($.channel_token, "final"),
     channel_commentary_tool_call: $ => seq($.channel_token, $.assistant_commentary, optional($.assistant_commentary)),
 
-    message_user: $ => seq($.start_token, $.header_user, $.content_tail),
-    message_system: $ => seq($.start_token, $.header_system, $.content_tail),
-    message_developer: $ => seq($.start_token, $.header_developer, $.content_tail),
-
-    // <|start|>functions.get_current_weather to=assistant<|channel|>commentary<|message|>{"sunny": true, "temperature": 20}<|end|>
-    message_tool_result: $ => seq($.start_token, $.header_tool_result, $.content_tail),
 
     role_tool: $ => seq("functions.", /[^\s]+/), // ? add?
 
-    // assistant_channel: $ => choice("analysis", "final", $.assistant_commentary), 
-    message_assistant_analysis: $ => seq($.start_token, $.header_assistant_analysis, $.content_tail),
-    message_assistant_final: $ => seq($.start_token, $.header_assistant_final, $.content_tail),
-    //
-    // - `<|start|>assistant<|channel|>commentary to=functions.get_current_weather <|constrain|>json<|message|>{"location":"San Francisco"}<|call|>`
-    message_assistant_commentary_tool_call_end: $ => seq(
-      $.start_token, $.header_assistant_commentary, $.content_tail),
-    message_assistant_commentary_tool_call_call: $ => seq(
-      $.start_token, $.header_assistant_commentary, $.call_tail),
+
     call_tail: $ => seq($.message_and_content, $.call_token), // FYI <|call|> is mapped to <|end|> when sending next user request turn
     //
     assistant_commentary: $ => seq(
@@ -112,12 +85,7 @@ module.exports = grammar({
     message_and_content: $ => seq($.message_token, $.message_content), // could happen if <|end|> is frequently missing which probably will happen due to model forgetting... or stop token extraction with llama-server (will result in mostly not seeing end/call/return actually!)
     content_tail: $ => seq($.message_and_content, $.end_token),
     //
-    return_tail: $ => seq($.message_and_content, $.return_token), // PRN collapse into message_assistant_return?
-    message_assistant_return: $ => seq(
-      $.start_token,
-      $.header_assistant_final,
-      $.return_tail
-    ),
+    return_tail: $ => seq($.message_and_content, $.return_token),
 
 
 

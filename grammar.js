@@ -121,7 +121,8 @@ module.exports = grammar({
     message_content: $ => repeat1($.content_char),
     content_char: $ => token(prec(-9,
       choice(
-        /[a-zA-Z0-9,#:\-\.\?\s\{\}\_\|>]+/, // todo does * (0+) vs + (1+) ? is there an "empty" match? not sure that would matter
+        // /[a-zA-Z0-9,#:\-\.\?\s\{\}\_\|>]+/, // todo does * (0+) vs + (1+) ? is there an "empty" match? not sure that would matter
+        /[^<]+/, // litearlly allow anything else (not <)
         /[<]/, // treat as single token to trigger a decision between continuing contents and the end/return/call tags... IIUC how tree-sitter works :)... I am still very new to this!!
       )
     )),

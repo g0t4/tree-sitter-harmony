@@ -54,7 +54,7 @@ module.exports = grammar({
     prefill_channel_final: $ => seq($.channel_token, "final"),
     prefill_channel_commentary_tool_call: $ => seq($.channel_token, $.assistant_commentary, optional($.assistant_commentary)),
 
-    // tool results
+    // * tool results
     // <|start|>functions.get_current_weather to=assistant<|channel|>commentary<|message|>{"sunny": true, "temperature": 20}<|end|>
     header_tool_result: $ => seq($.role_tool, " ", $.recipient_assistant, $.channel_token, "commentary"),
     recipient_assistant: $ => "to=assistant",
@@ -76,8 +76,6 @@ module.exports = grammar({
     )),
 
     message_and_content: $ => seq($.message_token, $.message_content), // could happen if <|end|> is frequently missing which probably will happen due to model forgetting... or stop token extraction with llama-server (will result in mostly not seeing end/call/return actually!)
-    content_tail: $ => seq($.message_and_content, $.end_token),
-    return_tail: $ => seq($.message_and_content, $.return_token),
 
     // * special tokens
     // FYI might want these to be lower priority than many of the message structures above so if there are extraneous instances in message contents that won't take precedence?

@@ -96,8 +96,9 @@ module.exports = grammar({
     ),
     constrain_format: $ => seq(
       $.constrain_token,
+      // TODO make reusable an "anything_without_hoovering_tags": 
       repeat1(choice(
-        /[^<]+/,
+        /[^<]+/, // be greedy with any other char (not <)
         /</ // force decision on single < which means it is allowed too just only one char at a time
       )),
     ),

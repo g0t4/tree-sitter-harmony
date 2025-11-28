@@ -116,16 +116,17 @@ module.exports = grammar({
     call_token: $ => "<|call|>", // assistant commentary channel => tool request only
 
 
+    // TODO what is up with whitespace allowed between tokens normally? ... I don't want to do that b/c then I might trim critical spacing before/after in content?
+    //   use it on content_char below
 
     // message_content: $ => /[a-zA-Z0-9,#:\-\.\?\s\{\}]*/, // or? until <|end|>/<|return|>? or (or maybe <|start|>?
-    message_content: $ => repeat1($.content_char),
-    content_char: $ => token(prec(-9,
+    message_content: $ => repeat1(token(prec(-9,
       choice(
         // /[a-zA-Z0-9,#:\-\.\?\s\{\}\_\|>]+/, // todo does * (0+) vs + (1+) ? is there an "empty" match? not sure that would matter
         /[^<]+/, // litearlly allow anything else (not <)
         /[<]/, // treat as single token to trigger a decision between continuing contents and the end/return/call tags... IIUC how tree-sitter works :)... I am still very new to this!!
       )
-    )),
+    ))),
     // FYI to test nested non-end tags:
     //   tree-sitter generate && time tree-sitter parse examples/fleshing/content_has_tag.harmony
 

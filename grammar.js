@@ -58,6 +58,7 @@ module.exports = grammar({
     header_system: $ => $.role_system,
     header_developer: $ => $.role_developer,
     header_tool_result: $ => seq($.role_tool, " ", $.recipient_assistant, $.channel_token, "commentary"),
+    recipient_assistant: $ => "to=assistant",
     //
     // assistant headers:
     header_assistant: $ => choice(
@@ -81,7 +82,7 @@ module.exports = grammar({
     // <|start|>functions.get_current_weather to=assistant<|channel|>commentary<|message|>{"sunny": true, "temperature": 20}<|end|>
     message_tool_result: $ => seq($.start_token, $.header_tool_result, $.content_tail),
 
-    role_tool: $ => seq("functions.", RegExp("[^\s]+")), // ? add?
+    role_tool: $ => seq("functions.", /[^\s]+/), // ? add?
 
     // assistant_channel: $ => choice("analysis", "final", $.assistant_commentary), 
     message_assistant_analysis: $ => seq($.start_token, $.header_assistant_analysis, $.content_tail),
@@ -98,6 +99,7 @@ module.exports = grammar({
       "commentary",
       optional(seq(/\s+/, $.recipient_functions, optional($.constrain_format)))
     ),
+    recipient_functions: $ => seq("to=functions.", /[^\s<]+/), // TODO make a consistent, inline rule, for function names
     constrain_format: $ => seq(
       $.constrain_token,
       $.anything_without_hoovering_tags
@@ -161,10 +163,6 @@ module.exports = grammar({
 
 
 
-    // * recipients
-    recipient_assistant: $ => "to=assistant",
-    // function_name: $ => "" ,
-    recipient_functions: $ => seq("to=functions.", /[^\s<]+/), // TODO? should I allow < in the format too but just trigger stop on it like message_content?
 
 
     // roles

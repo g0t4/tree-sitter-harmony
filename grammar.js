@@ -11,7 +11,6 @@ module.exports = grammar({
   name: "harmony",
 
   inline: $ => [
-    // $.anything_without_hoovering_tags,
     $.header_assistant, // not an actual node, just use child header node types directly
     $.header,
     $.final_token,
@@ -68,9 +67,9 @@ module.exports = grammar({
     recipient_functions: $ => seq("to=functions.", field("function_name", $.function_name)),
     constrain_format: $ => seq(
       $.constrain_token,
-      field("format", $.anything_without_hoovering_tags)
+      field("format", $.text)
     ),
-    anything_without_hoovering_tags: $ => repeat1(choice(
+    text: $ => repeat1(choice(
       /[^<]+/, // be greedy with any other char (not <)
       /</ // force decision on single < which means it is allowed too just only one char at a time
     )),
@@ -89,7 +88,7 @@ module.exports = grammar({
     return_token: $ => "<|return|>", // instead of <|end|> on a final message
     call_token: $ => "<|call|>", // assistant commentary channel => tool request only
 
-    message_content: $ => prec(-9, $.anything_without_hoovering_tags),
+    message_content: $ => prec(-9, $.text),
   },
 });
 

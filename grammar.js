@@ -15,6 +15,10 @@ module.exports = grammar({
   // - JSON in tool calls / results? (especially if <|constrain|>json!)
   // docs: https://tree-sitter.github.io/tree-sitter/3-syntax-highlighting.html#language-injection
 
+  inline: $ => [
+    $.anything_without_hoovering_tags,
+  ],
+
   rules: {
     // TODO ... explore more testing w.r.t. observation: 
     //   observation? seems like the first entry must match the full file? w/o this I get errors?
@@ -96,12 +100,12 @@ module.exports = grammar({
     ),
     constrain_format: $ => seq(
       $.constrain_token,
-      // TODO make reusable an "anything_without_hoovering_tags": 
-      repeat1(choice(
-        /[^<]+/, // be greedy with any other char (not <)
-        /</ // force decision on single < which means it is allowed too just only one char at a time
-      )),
+      $.anything_without_hoovering_tags
     ),
+    anything_without_hoovering_tags: $ => repeat1(choice(
+      /[^<]+/, // be greedy with any other char (not <)
+      /</ // force decision on single < which means it is allowed too just only one char at a time
+    )),
 
     // super common - high level concepts
     message_and_content: $ => seq($.message_token, $.message_content), // could happen if <|end|> is frequently missing which probably will happen due to model forgetting... or stop token extraction with llama-server (will result in mostly not seeing end/call/return actually!)

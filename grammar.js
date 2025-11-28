@@ -75,10 +75,8 @@ module.exports = grammar({
       /</ // force decision on single < which means it is allowed too just only one char at a time
     )),
 
-    // super common - high level concepts
     message_and_content: $ => seq($.message_token, $.message_content), // could happen if <|end|> is frequently missing which probably will happen due to model forgetting... or stop token extraction with llama-server (will result in mostly not seeing end/call/return actually!)
     content_tail: $ => seq($.message_and_content, $.end_token),
-    //
     return_tail: $ => seq($.message_and_content, $.return_token),
 
     // * special tokens

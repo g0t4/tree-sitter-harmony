@@ -45,10 +45,10 @@ module.exports = grammar({
     header_assistant: $ => choice(
       $.header_assistant_analysis, $.header_assistant_final, $.header_assistant_commentary
     ),
-    header_assistant_analysis: $ => seq($.role_assistant, $.channel_token, "analysis"),
-    header_assistant_final: $ => seq($.role_assistant, $.channel_token, "final"),
+    header_assistant_analysis: $ => seq("assistant", $.channel_token, "analysis"),
+    header_assistant_final: $ => seq("assistant", $.channel_token, "final"),
     header_assistant_commentary: $ => seq(
-      $.role_assistant, $.channel_token, $.assistant_commentary, optional($.assistant_commentary),
+      "assistant", $.channel_token, $.assistant_commentary, optional($.assistant_commentary),
       // ? does this work for preamble which is assistant_commentary w/o the to=functions.___ and instead just a regular message ending
       // - `<|start|>assistant<|channel|>commentary to=functions.get_current_weather <|constrain|>json<|message|>{"location":"San Francisco"}<|call|>`
     ),
@@ -128,15 +128,6 @@ module.exports = grammar({
     // )),
     // FYI to test nested non-end tags:
     //   tree-sitter generate && time tree-sitter parse examples/fleshing/content_has_tag.harmony
-
-
-
-
-
-    // roles
-    role_assistant: $ => "assistant",
-
-    // header: $ => RegExp(".*"),
 
   },
 });

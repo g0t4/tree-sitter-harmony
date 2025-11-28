@@ -25,6 +25,7 @@ module.exports = grammar({
       repeat($.message)),
 
     model_response_to_prefill: $ => seq(
+      // typical response after `<|start|>assistant` prefill
       choice($.channel_analysis, $.channel_final, $.channel_commentary_tool_call),
       $.message_and_content,
       $.final_token

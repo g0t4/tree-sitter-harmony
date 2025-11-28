@@ -102,12 +102,6 @@ module.exports = grammar({
     //    seems like spacing is allowed, i.e. assistant_commentary => the to=functions.name<SPACE><|message|> works even though I didn't define that in my grammar
     //   use it on content_char below
 
-    message_content: $ => repeat1(token(prec(-9,
-      choice(
-        /[^<]+/, // litearlly allow anything else (not <)
-        /[<]/, // treat as single token to trigger a decision between continuing contents and the end/return/call tags... IIUC how tree-sitter works :)... I am still very new to this!!
-      )
-    ))),
-
+    message_content: $ => prec(-9, $.anything_without_hoovering_tags),
   },
 });

@@ -43,6 +43,21 @@ tree-sitter build
 # test parsing:
 tree-sitter parse test.harmony
 
+# interactive web 'app'
+# run docker to target wasm:
+tree-sitter build --wasm # FYI --docker might work too
+tree-sitter playground  # as you type it updates the tree!
+# check "query" box ... and it will match/color the nodes in your queries!
+# can use queries below
+```
+
+query examples, made up classes (@start/@end)
+```highlights.scm
+(start_token) @start
+(end_token) @end
+```
+
+```fish
 # test queries!
 tree-sitter query queries/highlights.scm test.harmony
 ```

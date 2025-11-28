@@ -16,8 +16,9 @@ module.exports = grammar({
     $.final_token,
     $.assistant_commentary,
     $.constrain_format,
-    $.message_content
-
+    $.message_content,
+    $.recipient_functions,
+    $.role_tool,
   ],
 
   // FYI extras: [\s] is default... allows for whitespace around tokens unless clear it to force exact matches below...

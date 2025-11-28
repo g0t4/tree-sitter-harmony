@@ -11,11 +11,12 @@ module.exports = grammar({
   name: "harmony",
 
   inline: $ => [
-    $.anything_without_hoovering_tags,
+    // $.anything_without_hoovering_tags,
     $.header_assistant, // not an actual node, just use child header node types directly
     $.header,
     $.final_token,
     $.assistant_commentary,
+    $.constrain_format,
   ],
 
   // FYI extras: [\s] is default... allows for whitespace around tokens unless clear it to force exact matches below...
@@ -67,7 +68,7 @@ module.exports = grammar({
     recipient_functions: $ => seq("to=functions.", field("function_name", $.function_name)),
     constrain_format: $ => seq(
       $.constrain_token,
-      $.anything_without_hoovering_tags
+      field("format", $.anything_without_hoovering_tags)
     ),
     anything_without_hoovering_tags: $ => repeat1(choice(
       /[^<]+/, // be greedy with any other char (not <)

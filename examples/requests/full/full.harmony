@@ -1,3 +1,1 @@
-<|start|>user<|message|>What is 2 + 2?<|end|>
-<|start|>assistant<|channel|>analysis<|message|>User asks: "What is 2 + 2?" Simple arithmetic. Provide answer.<|end|>
-<|start|>assistant<|channel|>final<|message|>2 + 2 = 4.<|return|>
+<|start|>user<|message|>What is 2 + 2?<|end|><|start|>assistant<|channel|>analysis<|message|>User asks: "What is 2 + 2?" Simple arithmetic. Provide answer.<|end|><|start|>assistant<|channel|>final<|message|>2 + 2 = 4.<|return|>

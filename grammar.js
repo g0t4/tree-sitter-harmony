@@ -10,6 +10,11 @@
 module.exports = grammar({
   name: "harmony",
 
+  // TODO language injection
+  // - for markdown in system/developer message contents
+  // - JSON in tool calls / results? (especially if <|constrain|>json!)
+  // docs: https://tree-sitter.github.io/tree-sitter/3-syntax-highlighting.html#language-injection
+
   rules: {
     // TODO ... explore more testing w.r.t. observation: 
     //   observation? seems like the first entry must match the full file? w/o this I get errors?

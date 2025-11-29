@@ -11,3 +11,5 @@ User message
     (message_token)
     contents: (text)
     (end_token)))
+
+; BTW, :InspectTree in the (input) node is a great way to check expectations!

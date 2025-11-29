@@ -106,6 +106,20 @@ echo "(start_token) @type" > queries/highlights.scm
 tree-sitter highlight test.harmony
 ```
 
+## test/corpus
+
+```fish
+# https://tree-sitter.github.io/tree-sitter/creating-parsers/5-writing-tests.html
+
+tree-sitter test # run all tests
+
+# can write tests using cst format, that looks like the output of parse --cst:
+tree-sitter parse --cst test.harmony
+# add :cst below test name
+# this format allows verifying node text (not just node types/shapes)
+
+```
+
 
 ## ts_query_ls setup
 

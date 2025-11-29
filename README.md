@@ -110,6 +110,11 @@ tree-sitter highlight test.harmony
 ## ts_query_ls setup
 
 ```fish
+# https://github.com/ribru17/ts_query_ls
+brew install ts_query_ls
+# configure languageserver
+
+
 # careful with .tsqueryrc.json file, if you have a single trailing comma, NOPE...
 # when having issues, run CLI directly and it will say "Could not parse the provided configuration"
 ts_query_ls check

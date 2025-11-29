@@ -5,7 +5,7 @@
     "openai-harmony": "harmony"
   },
   "language_retrieval_patterns": [
-    "languages/src/([^/]+)/[^/]+\\.scm$"
+    "tree\\-sitter\\-([^/]+)\\.wasm"
   ],
   "valid_captures": {
     "highlights": {

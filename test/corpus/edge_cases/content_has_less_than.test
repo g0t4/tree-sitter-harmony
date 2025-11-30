@@ -1,0 +1,14 @@
+==================
+Message contents has < (less than) 
+:language(harmony)
+==================
+<|start|>user<|message|>content with < in it<|end|>
+---
+(source_file
+  (message
+    (start_token)
+    header: (header_user)
+    (message_token)
+    contents: (text)
+    (end_token)))
+

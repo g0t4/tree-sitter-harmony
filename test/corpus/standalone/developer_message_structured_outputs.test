@@ -1,3 +1,7 @@
+==================
+Developer message with Structured Outputs (Response Formats section)
+:language(harmony)
+==================
 <|start|>developer<|message|># Instructions
 
 You are a helpful shopping assistant
@@ -7,3 +11,12 @@ You are a helpful shopping assistant
 ## shopping_list
 
 {"properties":{"items":{"type":"array","description":"entries on the shopping list","items":{"type":"string"}}},"type":"object"}<|end|>
+---
+(source_file
+    (message
+      (start_token)
+      header: (header_developer)
+      (message_token)
+      contents: (text)
+; TODO parse the strucuted outputs json to extract it? ... and inject json language to it?
+      (end_token)))

@@ -71,12 +71,22 @@ format?: "celsius" | "fahrenheit", // default: celsius
   )
   (message
      (start_token)
-     header: (header_assistant_commentary)
+     header: (header_assistant_commentary
+        (channel_token)
+        function_name: (function_name)
+        (constrain_token)
+        format: (text)
+     )
+     (message_token)
+     contents: (text)
+     (end_token)
   )
   (message
      (start_token)
      header: (header_tool_result
-
+         function_name: (function_name)
+         (recipient_assistant)
+         (channel_token)
      )
      (message_token)
      contents: (text)

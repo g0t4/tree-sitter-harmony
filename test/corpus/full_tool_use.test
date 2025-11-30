@@ -79,7 +79,7 @@ format?: "celsius" | "fahrenheit", // default: celsius
      )
      (message_token)
      contents: (text)
-     (end_token)
+     (call_token)
   )
   (message
      (start_token)

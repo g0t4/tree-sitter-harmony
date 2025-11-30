@@ -1,1 +1,16 @@
+==================
+standalone - assistant final message
+:language(harmony)
+==================
 <|start|>assistant<|channel|>analysis<|message|>User asks: "What is 2 + 2?" Simple arithmetic. Provide answer.<|end|>
+---
+(source_file
+    (message
+      (start_token)
+      header: (header_assistant_analysis
+        (channel_token)
+      )
+      (message_token)
+      contents: (text)
+      (end_token)))
+

@@ -1,0 +1,18 @@
+===========================================================|||
+after user message, start assistant prefill - do I want to flag this as a new node? like prefill_start_assistant?
+:language(harmony)
+===========================================================|||
+<|start|>user<|message|>please check the time<|end|><|start|>assistant
+-----------------------------------------------------------|||
+(source_file
+  (message
+     (start_token)
+     header: (header_user)
+     (message_token)
+     contents: (text)
+     (end_token))
+  (ERROR
+  (start_token)))
+
+; TODO FIX to detect say prefill_start_assistant node type?)
+

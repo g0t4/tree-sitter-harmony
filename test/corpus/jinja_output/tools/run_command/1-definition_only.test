@@ -1,0 +1,53 @@
+===========================================================|||
+jinja template output (TODO FIX input here if wrong) - tools - run_command - definition only in (system + developer messages)
+:language(harmony)
+===========================================================|||
+<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.
+Knowledge cutoff: 2024-06
+Current date: 2025-11-30
+
+Reasoning: medium
+
+# Valid channels: analysis, commentary, final. Channel must be included for every message.
+Calls to these tools must go to the commentary channel: 'functions'.<|end|><|start|>developer<|message|># Instructions
+
+Your name is Qwenny
+You can respond with markdown
+
+# Tools
+
+## functions
+
+namespace functions {
+
+// Run a command on this darwin machine
+type run_command = (_: {
+// Optional, working directory
+workdir?: string,
+// Optional, STDIN
+stdin?: string,
+// Command with args
+command: string,
+}) => any;
+
+} // namespace functions<|end|>
+-----------------------------------------------------------|||
+;
+; TODO! consider flagging namespace functions node and inject typescript as the language
+;   TODO! USE THIS TEST CASE IF SO ... match on ## functions ... to // namespace functions (right befor end)
+; 
+; TODO FYI this example is from jinja template output... so do not assume this is the right output!
+; TODO make sure all issues are fixed in jinja template and then this gets updated like a checklist along the way
+(source_file
+    (message
+      (start_token)
+      header: (header_system)
+      (message_token)
+      contents: (text)
+      (end_token))
+    (message
+      (start_token)
+      header: (header_developer)
+      (message_token)
+      contents: (text)
+      (end_token)))

@@ -70,7 +70,8 @@ module.exports = grammar({
     assistant_commentary_recipient_in_commentary: $ => seq(
       $.channel_token,
       "commentary",
-      optional(seq(/\s+/, $.recipient_functions, optional($.constrain_format))),
+      optional($.recipient_functions),
+      optional($.constrain_format),
       // ? does this work for preamble which is assistant_commentary w/o the to=functions.___ and instead just a regular message ending
       // - `<|start|>assistant<|channel|>commentary to=functions.get_current_weather <|constrain|>json<|message|>{"location":"San Francisco"}<|call|>`
     ),

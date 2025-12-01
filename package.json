@@ -15,8 +15,8 @@
   "type": "commonjs",
   "main": "grammar.js",
   "scripts": {
-    "test": "tree-sitter generate && tree-sitter test",
-    "build": "tree-sitter generate && tree-sitter build && tree-sitter test"
+    "test": "fish -c 'tree-sitter generate && tree-sitter test'",
+    "build": "fish -c 'tree-sitter generate && tree-sitter build && tree-sitter test'"
   },
   "devDependencies": {
     "tree-sitter-cli": "^0.25.10"

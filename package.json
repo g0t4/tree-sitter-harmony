@@ -18,6 +18,10 @@
     "test": "./scripts/tests.fish",
     "build": "./scripts/build.fish"
   },
+  "dependencies": {
+    "node-addon-api": "^8.5.0",
+    "node-gyp-build": "^4.8.4"
+  },
   "devDependencies": {
     "tree-sitter-cli": "^0.25.10"
   }

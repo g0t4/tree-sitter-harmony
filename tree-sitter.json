@@ -10,7 +10,8 @@
         "harmony"
       ],
       "injection-regex": "^harmony$",
-      "class-name": "TreeSitterHarmony"
+      "class-name": "TreeSitterHarmony",
+      "highlights": "queries/harmony/highlights.scm"
     }
   ],
   "metadata": {
